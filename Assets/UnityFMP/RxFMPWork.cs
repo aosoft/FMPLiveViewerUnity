@@ -62,6 +62,23 @@ namespace UnityFMP
 
 				UpdateEvery();
 
+				if (_musicStartCounter.HasValue)
+				{
+					if (_musicStartCounter.Value != _gwork.StartCounter)
+					{
+						UpdateOnMusicStart();
+						_musicStartCounter = _gwork.StartCounter;
+					}
+				}
+				else
+				{
+					if ((_gwork.Status & FMPStat.Play) != 0)
+					{
+						UpdateOnMusicStart();
+						_musicStartCounter = _gwork.StartCounter;
+					}
+				}
+
 				if (_musicStartCounter.HasValue == false ||
 					_musicStartCounter.Value != _gwork.StartCounter)
 				{

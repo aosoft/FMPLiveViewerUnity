@@ -7,10 +7,11 @@ using UniRx;
 
 namespace UnityFMP
 {
-	class RxFMPWork : IDisposable
+	public class RxFMPWork : IDisposable
 	{
 		private FMPWork _work = new FMPWork();
-		private FMPPartWork[] _tmpPartworks = new FMPPartWork[FMPPartWork.MaxChannelCount];
+		private FMPGlobalWork _gwork = new FMPGlobalWork();
+		private FMPPartWork[] _partworks = new FMPPartWork[FMPPartWork.MaxChannelCount];
 		private uint? _musicStartCounter = new uint?();
 
 		private ReactiveProperty<TimeSpan> _propPlayTime = new ReactiveProperty<TimeSpan>();
@@ -27,7 +28,7 @@ namespace UnityFMP
 
 		public RxFMPWork()
 		{
-			for (int i = 0; i < FMPPartWork.MaxChannelCount; i++)
+			for (int i = 0; i < _partworks.Length; i++)
 			{
 				_propParts.Add(new RxFMPPartWork());
 			}
@@ -51,11 +52,23 @@ namespace UnityFMP
 				_work.Open();
 				try
 				{
-					InternalUpdate();
+					_gwork = _work.GetGlobalWork();
+					_work.CopyPartWork(0, _partworks, 0, _partworks.Length);
 				}
 				finally
 				{
 					_work.Close();
+				}
+
+				UpdateEvery();
+
+				if (_musicStartCounter.HasValue == false ||
+					_musicStartCounter.Value != _gwork.StartCounter)
+				{
+					UpdateOnMusicStart();
+
+					_musicStartCounter = _gwork.StartCounter;
+					_observeMusicStart.OnNext(Unit.Default);
 				}
 			}
 			catch
@@ -63,81 +76,72 @@ namespace UnityFMP
 			}
 		}
 
-		private void InternalUpdate()
+		private void UpdateEvery()
 		{
-			var gwork = _work.GetGlobalWork();
-			_work.CopyPartWork(0, _tmpPartworks, 0, _tmpPartworks.Length);
-
-			_propPlayTime.Value = TimeSpan.FromMilliseconds(gwork.PlayTime * 10);
-			if (gwork.Count < 1)
+			_propPlayTime.Value = TimeSpan.FromMilliseconds(_gwork.PlayTime * 10);
+			if (_gwork.Count < 1)
 			{
 				_propProgress.Value = 0.0f;
 			}
-			else if (gwork.CountNow > gwork.Count)
+			else if (_gwork.CountNow > _gwork.Count)
 			{
 				_propProgress.Value = 1.0f;
 			}
 			else
 			{
-				_propProgress.Value = (float)gwork.CountNow / (float)gwork.Count;
+				_propProgress.Value = (float)_gwork.CountNow / (float)_gwork.Count;
 			}
 
-			for (int i = 0; i < _tmpPartworks.Length; i++)
+			for (int i = 0; i < _partworks.Length; i++)
 			{
-				_propParts[i].Update(_tmpPartworks[i]);
+				_propParts[i].Update(_partworks[i]);
 			}
 
-			if (_musicStartCounter.HasValue == false ||
-				_musicStartCounter.Value != gwork.StartCounter)
-			{
-				//	再生開始時に行うプロパティ更新
+		}
 
-				int fm = 0;
-				int ssg = 0;
-				int pcm = 0;
-				int pc = 0;
-				for (int i = 0; i < FMPPartWork.MaxChannelCount; i++)
+		private void UpdateOnMusicStart()
+		{
+			int fm = 0;
+			int ssg = 0;
+			int pcm = 0;
+			int pc = 0;
+			for (int i = 0; i < FMPPartWork.MaxChannelCount; i++)
+			{
+				var unit = _gwork.Mode[i];
+				switch (unit)
 				{
-					var unit = gwork.Mode[i];
-					switch (unit)
-					{
-						case FMPSoundUnit.FM:
-							{
-								fm++;
-								pc++;
-							}
-							break;
+					case FMPSoundUnit.FM:
+						{
+							fm++;
+							pc++;
+						}
+						break;
 
-						case FMPSoundUnit.SSG:
-							{
-								ssg++;
-								pc++;
-							}
-							break;
+					case FMPSoundUnit.SSG:
+						{
+							ssg++;
+							pc++;
+						}
+						break;
 
-						case FMPSoundUnit.PCM:
-							{
-								pcm++;
-								pc++;
-							}
-							break;
-					}
-
-					_propParts[i].SetSoundUnit(unit);
+					case FMPSoundUnit.PCM:
+						{
+							pcm++;
+							pc++;
+						}
+						break;
 				}
 
-				_propActiveChannelCount.Value = pc;
-				_propFMChannelCount.Value = fm;
-				_propSSGChannelCount.Value = ssg;
-				_propPCMChannelCount.Value = pcm;
-
-
-				_propMusicTitle.Value = FMPControl.GetTextData(FMPText.Title);
-				_propMusicCreator.Value = FMPControl.GetTextData(FMPText.Creator);
-
-				_musicStartCounter = gwork.StartCounter;
-				_observeMusicStart.OnNext(Unit.Default);
+				_propParts[i].SetSoundUnit(unit);
 			}
+
+			_propActiveChannelCount.Value = pc;
+			_propFMChannelCount.Value = fm;
+			_propSSGChannelCount.Value = ssg;
+			_propPCMChannelCount.Value = pcm;
+
+			_propMusicTitle.Value = FMPControl.GetTextData(FMPText.Title);
+			_propMusicCreator.Value = FMPControl.GetTextData(FMPText.Creator);
 		}
 
 

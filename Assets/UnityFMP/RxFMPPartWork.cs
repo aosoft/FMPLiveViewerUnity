@@ -7,7 +7,7 @@ using UniRx;
 
 namespace UnityFMP
 {
-	class RxFMPPartWork
+	public class RxFMPPartWork
 	{
 		private FMPPartWork _currentWork = new FMPPartWork();
 

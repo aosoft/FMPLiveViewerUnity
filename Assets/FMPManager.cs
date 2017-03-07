@@ -8,7 +8,10 @@ using UniRx.Triggers;
 
 public class FMPManager : MonoBehaviour
 {
-	RxFMPWork _fmpWork = null;
+	private RxFMPWork _fmpWork = null;
+
+	public UnityEngine.UI.Button _playButton;
+	public UnityEngine.UI.Button _pauseButton;
 
 	public StringReactiveProperty _playTime = new StringReactiveProperty();
 	public StringReactiveProperty _musicTitle = new StringReactiveProperty();
@@ -27,6 +30,31 @@ public class FMPManager : MonoBehaviour
 		_fmpWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value);
 		_fmpWork.MusicTitle.Subscribe(value => _musicTitle.Value = value);
 		_fmpWork.MusicCreator.Subscribe(value => _musicCreator.Value = value);
+
+		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
+		int index = 0;
+		_playButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
+			.Subscribe(value =>
+			{
+				FMPControl.MusicLoadAndPlay(value);
+			});
+
+		_pauseButton.OnClickAsObservable().Subscribe(_ =>
+		{
+			FMPControl.MusicPause();
+		});
+	}
+
+	IEnumerator<string> GetMusics()
+	{
+		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
+		while (true)
+		{
+			foreach (var item in musics)
+			{
+				yield return item;
+			} 
+		}
 	}
 
 	void OnDestroy()
@@ -38,6 +66,11 @@ public class FMPManager : MonoBehaviour
 		}
 	}
 
-
-
+	public RxFMPWork FMPWork
+	{
+		get
+		{
+			return _fmpWork;
+		}
+	}
 }

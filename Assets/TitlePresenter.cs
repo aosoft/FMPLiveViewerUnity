@@ -12,8 +12,14 @@ public class TitlePresenter : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		var animator = GetComponent<Animator>();
+
 		FMPManager.FMPWork.MusicTitle.SubscribeToText(_title).AddTo(this);
 		FMPManager.FMPWork.MusicCreator.SubscribeToText(_musicCreator).AddTo(this);
+		FMPManager.FMPWork.MusicStartEvent.Subscribe(_ =>
+		{
+			animator.SetTrigger("Start");
+		});
 	}
 
 	// Update is called once per frame

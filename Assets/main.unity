@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 502845897}
   - component: {fileID: 502845896}
   - component: {fileID: 502845900}
+  - component: {fileID: 502845901}
   m_Layer: 5
   m_Name: TitleCanvas
   m_TagString: Untagged
@@ -461,6 +462,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!225 &502845901
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 502845894}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &541035324
 GameObject:
   m_ObjectHideFlags: 0

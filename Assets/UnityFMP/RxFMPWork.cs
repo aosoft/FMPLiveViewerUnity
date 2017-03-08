@@ -78,15 +78,6 @@ namespace UnityFMP
 						_musicStartCounter = _gwork.StartCounter;
 					}
 				}
-
-				if (_musicStartCounter.HasValue == false ||
-					_musicStartCounter.Value != _gwork.StartCounter)
-				{
-					UpdateOnMusicStart();
-
-					_musicStartCounter = _gwork.StartCounter;
-					_observeMusicStart.OnNext(Unit.Default);
-				}
 			}
 			catch
 			{
@@ -159,6 +150,8 @@ namespace UnityFMP
 
 			_propMusicTitle.Value = FMPControl.GetTextData(FMPText.Title);
 			_propMusicCreator.Value = FMPControl.GetTextData(FMPText.Creator);
+
+			_observeMusicStart.OnNext(Unit.Default);
 		}
 
 

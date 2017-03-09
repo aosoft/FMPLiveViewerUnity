@@ -19,7 +19,7 @@ public class TitlePresenter : MonoBehaviour
 		FMPManager.FMPWork.MusicStartEvent.Subscribe(_ =>
 		{
 			animator.SetTrigger("Start");
-		});
+		}).AddTo(this);
 	}
 
 	// Update is called once per frame

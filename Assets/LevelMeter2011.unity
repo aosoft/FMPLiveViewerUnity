@@ -99,6 +99,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 41218465}
+  - component: {fileID: 41218466}
   m_Layer: 0
   m_Name: LevelMeter
   m_TagString: Untagged
@@ -121,6 +122,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &41218466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 41218464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e043199e2eb1814f85e6258b9cec148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _body: {fileID: 864734845}
+  _peak: {fileID: 1639214282}
 --- !u!1 &864734845
 GameObject:
   m_ObjectHideFlags: 0

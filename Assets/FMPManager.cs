@@ -43,6 +43,16 @@ public class FMPManager : MonoBehaviour
 		}).AddTo(this);
 	}
 
+	void Start()
+	{
+		var o = GameObject.Find("LevelMeter");
+		if (o != null)
+		{
+			var l = o.GetComponent<LevelMeter>();
+			l.PartWork.Value = FMPWork.Parts[0];
+		}
+	}
+
 	IEnumerator<string> GetMusics()
 	{
 		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");

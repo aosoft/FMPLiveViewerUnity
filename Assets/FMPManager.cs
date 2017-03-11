@@ -23,14 +23,15 @@ public class FMPManager : MonoBehaviour
 	{
 		FMPWork = new RxFMPWork();
 
-		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update());
+		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
 
 		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value).AddTo(this);
 		FMPWork.MusicTitle.Subscribe(value => _musicTitle.Value = value).AddTo(this);
 		FMPWork.MusicCreator.Subscribe(value => _musicCreator.Value = value).AddTo(this);
 		FMPWork.Status
 			.Select(value => (value != FMPStat.None && (value & FMPStat.Play) != 0) ? "Pause" : "Play")
-			.SubscribeToText(_playOrPauseButton.GetComponentInChildren<UnityEngine.UI.Text>());
+			.SubscribeToText(_playOrPauseButton.GetComponentInChildren<UnityEngine.UI.Text>())
+			.AddTo(this);
 
 		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
 		int index = 0;

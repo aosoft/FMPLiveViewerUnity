@@ -21,10 +21,4 @@ public class TitlePresenter : MonoBehaviour
 			animator.SetTrigger("Start");
 		}).AddTo(this);
 	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
 }

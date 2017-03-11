@@ -172,7 +172,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 3672250}
   m_LocalRotation: {x: 0.11990084, y: -0, z: -0, w: 0.99278593}
-  m_LocalPosition: {x: 0, y: 1.96, z: -10}
+  m_LocalPosition: {x: 0, y: 8.14, z: -23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -500,8 +500,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe3cfb7344f8e84689c6eaec496fdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playButton: {fileID: 1891976637}
-  _pauseButton: {fileID: 685024228}
+  _nextMusicButton: {fileID: 1891976637}
+  _playOrPauseButton: {fileID: 685024228}
   _playTime:
     value: 
   _musicTitle:
@@ -533,7 +533,7 @@ GameObject:
   - component: {fileID: 685024229}
   - component: {fileID: 685024228}
   m_Layer: 5
-  m_Name: PauseButton
+  m_Name: PlayOrPauseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -788,7 +788,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Play Music
+  m_Text: Next Music
 --- !u!222 &885679219
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1033,7 +1033,7 @@ GameObject:
   - component: {fileID: 1891976638}
   - component: {fileID: 1891976637}
   m_Layer: 5
-  m_Name: PlayButton
+  m_Name: NexMusictButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

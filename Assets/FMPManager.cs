@@ -8,8 +8,8 @@ using UniRx.Triggers;
 
 public class FMPManager : MonoBehaviour
 {
-	public UnityEngine.UI.Button _playButton;
-	public UnityEngine.UI.Button _pauseButton;
+	public UnityEngine.UI.Button _nextMusicButton;
+	public UnityEngine.UI.Button _playOrPauseButton;
 
 	public StringReactiveProperty _playTime = new StringReactiveProperty();
 	public StringReactiveProperty _musicTitle = new StringReactiveProperty();
@@ -25,21 +25,31 @@ public class FMPManager : MonoBehaviour
 
 		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update());
 
-		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value);
-		FMPWork.MusicTitle.Subscribe(value => _musicTitle.Value = value);
-		FMPWork.MusicCreator.Subscribe(value => _musicCreator.Value = value);
+		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value).AddTo(this);
+		FMPWork.MusicTitle.Subscribe(value => _musicTitle.Value = value).AddTo(this);
+		FMPWork.MusicCreator.Subscribe(value => _musicCreator.Value = value).AddTo(this);
+		FMPWork.Status
+			.Select(value => (value != FMPStat.None && (value & FMPStat.Play) != 0) ? "Pause" : "Play")
+			.SubscribeToText(_playOrPauseButton.GetComponentInChildren<UnityEngine.UI.Text>());
 
 		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
 		int index = 0;
-		_playButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
+		_nextMusicButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
 			.Subscribe(value =>
 			{
 				FMPControl.MusicLoadAndPlay(value);
 			}).AddTo(this);
 
-		_pauseButton.OnClickAsObservable().Subscribe(_ =>
+		_playOrPauseButton.OnClickAsObservable().Subscribe(_ =>
 		{
-			FMPControl.MusicPause();
+			if ((FMPWork.Status.Value & (FMPStat.Pause | FMPStat.Play)) != 0)
+			{
+				FMPControl.MusicPause();
+			}
+			else
+			{
+				FMPControl.MusicPlay();
+			}
 		}).AddTo(this);
 	}
 

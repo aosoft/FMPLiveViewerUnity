@@ -14,6 +14,7 @@ namespace UnityFMP
 		private FMPPartWork[] _partworks = new FMPPartWork[FMPPartWork.MaxChannelCount];
 		private uint? _musicStartCounter = new uint?();
 
+		private ReactiveProperty<FMPStat> _propStatus = new ReactiveProperty<FMPStat>();
 		private ReactiveProperty<TimeSpan> _propPlayTime = new ReactiveProperty<TimeSpan>();
 		private FloatReactiveProperty _propProgress = new FloatReactiveProperty();
 		private StringReactiveProperty _propMusicTitle = new StringReactiveProperty();
@@ -86,6 +87,7 @@ namespace UnityFMP
 
 		private void UpdateEvery()
 		{
+			_propStatus.Value = _gwork.Status;
 			_propPlayTime.Value = TimeSpan.FromMilliseconds(_gwork.PlayTime * 10);
 			if (_gwork.Count < 1)
 			{
@@ -154,6 +156,13 @@ namespace UnityFMP
 			_observeMusicStart.OnNext(Unit.Default);
 		}
 
+		public IReadOnlyReactiveProperty<FMPStat> Status
+		{
+			get
+			{
+				return _propStatus;
+			}
+		}
 
 		public IReadOnlyReactiveProperty<TimeSpan> PlayTime
 		{

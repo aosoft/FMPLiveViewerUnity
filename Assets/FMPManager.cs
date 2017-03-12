@@ -8,6 +8,8 @@ using UniRx.Triggers;
 
 public class FMPManager : MonoBehaviour
 {
+	private static RxFMPWork _work = null;
+
 	public UnityEngine.UI.Button _nextMusicButton;
 	public UnityEngine.UI.Button _playOrPauseButton;
 
@@ -21,8 +23,6 @@ public class FMPManager : MonoBehaviour
 
 	public void Awake()
 	{
-		FMPWork = new RxFMPWork();
-
 		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
 
 		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value).AddTo(this);
@@ -54,40 +54,24 @@ public class FMPManager : MonoBehaviour
 		}).AddTo(this);
 	}
 
-	void Start()
-	{
-		var o = GameObject.Find("LevelMeter");
-		if (o != null)
-		{
-			var l = o.GetComponent<LevelMeter>();
-			l.PartWork.Value = FMPWork.Parts[0];
-		}
-	}
-
-	IEnumerator<string> GetMusics()
-	{
-		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
-		while (true)
-		{
-			foreach (var item in musics)
-			{
-				yield return item;
-			} 
-		}
-	}
-
 	void OnDestroy()
 	{
-		if (FMPWork != null)
+		if (_work != null)
 		{
-			FMPWork.Dispose();
-			FMPWork = null;
+			_work.Dispose();
+			_work = null;
 		}
 	}
 
 	static public RxFMPWork FMPWork
 	{
-		get;
-		private set;
+		get
+		{
+			if (_work == null)
+			{
+				_work = new RxFMPWork();
+			}
+			return _work;
+		}
 	}
 }

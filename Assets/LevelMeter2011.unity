@@ -181,6 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2027475996}
   - component: {fileID: 2027475997}
+  - component: {fileID: 2027475998}
   m_Layer: 0
   m_Name: LevelMeterBase
   m_TagString: Untagged
@@ -215,3 +216,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelMeterPrefab: {fileID: 1397030065490928, guid: 997c5c07e95adf249b883e5601426b18,
     type: 2}
+--- !u!95 &2027475998
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2027475995}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fb0b607f9c704fc4b988c1c8e1ef1f64, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1

@@ -25,6 +25,9 @@ public class LevelMeter2011Base : MonoBehaviour
 
 		work.ActiveChannelCount.Subscribe(count =>
 		{
+			//
+			//	有効なチャンネル数が変動したらレベルメーターの表示本数、レイアウトを調整する。
+			//
 			float width = 1.0f;
 			if (count > 12)
 			{
@@ -34,6 +37,16 @@ public class LevelMeter2011Base : MonoBehaviour
 
 			for (int i = 0; i < _levelMeters.Length; i++)
 			{
+				if (i < count)
+				{
+					float angleR = i * 2.0f * Mathf.PI / count;
+					float angle = i * 360.0f / count + 90.0f;
+
+					_levelMeters[i].transform.localPosition =
+						new Vector3(4.0f * Mathf.Sin(angleR), 0.0f, 4.0f * Mathf.Cos(angleR));
+					_levelMeters[i].transform.localEulerAngles = new Vector3(0.0f, angle, 0.0f);
+					_levelMeters[i].transform.localScale = new Vector3(1.0f, 1.0f, width);
+				}
 				_levelMeters[i].SetActive(i < count);
 			}
 		}).AddTo(this);

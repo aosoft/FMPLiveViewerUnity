@@ -23,7 +23,9 @@ public class LevelMeter : MonoBehaviour
 		{
 			part.KeyOn.Subscribe(value =>
 			{
-				transform.localScale = new Vector3(1.0f, 5.0f * part.VolumeFloat.Value, 1.0f);
+				var tmp = transform.localScale;
+				tmp.y = 5.0f * part.VolumeFloat.Value;
+				transform.localScale = tmp;
 				bodyAnimator.SetTrigger("Start");
 				peakAnimator.SetTrigger("Start");
 			}).AddTo(this);

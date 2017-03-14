@@ -11,7 +11,7 @@ namespace UnityFMP
 	{
 		private FMPPartWork _currentWork = new FMPPartWork();
 
-		private ReactiveProperty<FMPSoundUnit> _propSoundUnit = new ReactiveProperty<FMPSoundUnit>();
+		private ReactiveProperty<FMPSoundUnit> _propSoundUnit = new ReactiveProperty<FMPSoundUnit>(FMPSoundUnit.None);
 		private ByteReactiveProperty _propKeyOn = new ByteReactiveProperty();
 		private ReactiveProperty<FMPNote> _propNote = new ReactiveProperty<FMPNote>();
 		private IntReactiveProperty _propVolume = new IntReactiveProperty();

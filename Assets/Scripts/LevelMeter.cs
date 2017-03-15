@@ -17,50 +17,55 @@ public class LevelMeter : MonoBehaviour
 
 	private void Awake()
 	{
-		var renderer = GetComponent<MeshRenderer>();
+		var bodyRenderer = _body.GetComponent<MeshRenderer>();
 		var bodyAnimator = _body.GetComponent<Animator>();
+		var peakRenderer = _peak.GetComponent<MeshRenderer>();
 		var peakAnimator = _peak.GetComponent<Animator>();
 
 		PartWork.Subscribe(part =>
 		{
-			part.SoundUnit.Subscribe(value =>
+			if (part != null)
 			{
-				Material mat = null;
-				switch (value)
+				part.SoundUnit.Subscribe(value =>
 				{
-					case FMPSoundUnit.FM:
-						{
-							mat = Resources.Load("LevelMeterFM") as Material;
-						}
-						break;
-					case FMPSoundUnit.SSG:
-						{
-							mat = Resources.Load("LevelMeterSSG") as Material;
-						}
-						break;
-					case FMPSoundUnit.PCM:
-						{
-							mat = Resources.Load("LevelMeterPCM") as Material;
-						}
-						break;
-					default:
-						{
-							mat = null;
-						}
-						break;
-				}
+					Material mat = null;
+					switch (value)
+					{
+						case FMPSoundUnit.FM:
+							{
+								mat = Resources.Load("LevelMeterFM") as Material;
+							}
+							break;
+						case FMPSoundUnit.SSG:
+							{
+								mat = Resources.Load("LevelMeterSSG") as Material;
+							}
+							break;
+						case FMPSoundUnit.PCM:
+							{
+								mat = Resources.Load("LevelMeterPCM") as Material;
+							}
+							break;
+						default:
+							{
+								mat = null;
+							}
+							break;
+					}
 
-				renderer.material = mat;
-			}).AddTo(this);
+					bodyRenderer.material = mat;
+					peakRenderer.material = mat;
+				}).AddTo(this);
 
-			part.KeyOn.Subscribe(value =>
-			{
-				var tmp = transform.localScale;
-				tmp.y = 5.0f * part.VolumeFloat.Value;
-				transform.localScale = tmp;
-				bodyAnimator.SetTrigger("Start");
-				peakAnimator.SetTrigger("Start");
-			}).AddTo(this);
+				part.KeyOn.Subscribe(value =>
+				{
+					var tmp = transform.localScale;
+					tmp.y = 5.0f * part.VolumeFloat.Value;
+					transform.localScale = tmp;
+					bodyAnimator.SetTrigger("Start");
+					peakAnimator.SetTrigger("Start");
+				}).AddTo(this);
+			}
 		}).AddTo(this);
 	}
 

@@ -25,7 +25,10 @@ namespace UnityFMP
 		public void Update(FMPPartWork work)
 		{
 			_currentWork = work;
-			_propKeyOn.Value = work.Keyon;
+			if (work.Note.IsRest == false)
+			{
+				_propKeyOn.Value = work.Keyon;
+			}
 			_propNote.Value = work.Note;
 			_propVolume.Value = work.Volume;
 			_propVolumeFloat.Value = (float)work.Volume / 127.0f;

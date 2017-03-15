@@ -10,12 +10,12 @@ public class FMPManager : MonoBehaviour
 {
 	private static RxFMPWork _work = null;
 
+	public UnityEngine.UI.Text _musicTitle;
+	public UnityEngine.UI.Text _musicCreator;
 	public UnityEngine.UI.Button _nextMusicButton;
 	public UnityEngine.UI.Button _playOrPauseButton;
 
 	public StringReactiveProperty _playTime = new StringReactiveProperty();
-	public StringReactiveProperty _musicTitle = new StringReactiveProperty();
-	public StringReactiveProperty _musicCreator = new StringReactiveProperty();
 
 	public FMPManager()
 	{
@@ -26,8 +26,8 @@ public class FMPManager : MonoBehaviour
 		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
 
 		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value).AddTo(this);
-		FMPWork.MusicTitle.Subscribe(value => _musicTitle.Value = value).AddTo(this);
-		FMPWork.MusicCreator.Subscribe(value => _musicCreator.Value = value).AddTo(this);
+		FMPWork.MusicTitle.SubscribeToText(_musicTitle).AddTo(this);
+		FMPWork.MusicCreator.SubscribeToText(_musicCreator).AddTo(this);
 		FMPWork.Status
 			.Select(value => (value != FMPStat.None && (value & FMPStat.Play) != 0) ? "Pause" : "Play")
 			.SubscribeToText(_playOrPauseButton.GetComponentInChildren<UnityEngine.UI.Text>())

@@ -10,6 +10,8 @@ public class LevelMeter : MonoBehaviour
 	public GameObject _body;
 	public GameObject _peak;
 
+	private Vector3 _defaultLocalScale;
+
 	public LevelMeter()
 	{
 		this.PartWork = new ReactiveProperty<RxFMPPartWork>();
@@ -21,6 +23,11 @@ public class LevelMeter : MonoBehaviour
 		var bodyAnimator = _body.GetComponent<Animator>();
 		var peakRenderer = _peak.GetComponent<MeshRenderer>();
 		var peakAnimator = _peak.GetComponent<Animator>();
+
+		//	Scale の初期値をひかえておく
+		//	レベルメーターの KeyOn 時に設定する Scale の最小値はこれを参照する。
+		//	(レベルメーターの値を 0 にすると表示がおかしくなるため)
+		_defaultLocalScale = transform.localScale;
 
 		PartWork.Subscribe(part =>
 		{
@@ -60,7 +67,7 @@ public class LevelMeter : MonoBehaviour
 				part.KeyOn.Subscribe(value =>
 				{
 					var tmp = transform.localScale;
-					tmp.y = 5.0f * part.VolumeFloat.Value;
+					tmp.y = Mathf.Max(5.0f * part.VolumeFloat.Value, _defaultLocalScale.y);
 					transform.localScale = tmp;
 					bodyAnimator.SetTrigger("Start");
 					peakAnimator.SetTrigger("Start");

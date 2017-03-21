@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using FMP.FMP7;
 using UnityFMP;
@@ -10,12 +11,15 @@ public class FMPManager : MonoBehaviour
 {
 	private static RxFMPWork _work = null;
 
+	private static string _timeFormat =
+		string.Format("HH:mm:ss{0}ff", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
 	public UnityEngine.UI.Text _musicTitle;
 	public UnityEngine.UI.Text _musicCreator;
 	public UnityEngine.UI.Button _nextMusicButton;
 	public UnityEngine.UI.Button _playOrPauseButton;
-
-	public StringReactiveProperty _playTime = new StringReactiveProperty();
+	public UnityEngine.UI.Slider _playProgress;
+	public UnityEngine.UI.Text _playTime;
 
 	public FMPManager()
 	{
@@ -25,7 +29,6 @@ public class FMPManager : MonoBehaviour
 	{
 		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
 
-		FMPWork.PlayTime.Select(value => value.ToString()).Subscribe(value => _playTime.Value = value).AddTo(this);
 		FMPWork.MusicTitle.SubscribeToText(_musicTitle).AddTo(this);
 		FMPWork.MusicCreator.SubscribeToText(_musicCreator).AddTo(this);
 		FMPWork.Status
@@ -52,6 +55,11 @@ public class FMPManager : MonoBehaviour
 				FMPControl.MusicPlay();
 			}
 		}).AddTo(this);
+
+		FMPWork.Progress.Subscribe(value => _playProgress.value = value).AddTo(this);
+		FMPWork.PlayTime
+			.Select(value => (new System.DateTime(value.Ticks)).ToString(_timeFormat))
+			.SubscribeToText(_playTime).AddTo(this);
 	}
 
 	void OnDestroy()

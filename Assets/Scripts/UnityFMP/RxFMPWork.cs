@@ -23,6 +23,9 @@ namespace UnityFMP
 		private IntReactiveProperty _propFMChannelCount = new IntReactiveProperty();
 		private IntReactiveProperty _propSSGChannelCount = new IntReactiveProperty();
 		private IntReactiveProperty _propPCMChannelCount = new IntReactiveProperty();
+		private IntReactiveProperty _propAverageCalorie = new IntReactiveProperty();
+		private IntReactiveProperty _propInstantCalorie = new IntReactiveProperty();
+
 		private ReactiveCollection<RxFMPPartWork> _propParts = new ReactiveCollection<RxFMPPartWork>();
 
 		private Subject<Unit> _observeMusicStart = new Subject<Unit>();
@@ -101,6 +104,9 @@ namespace UnityFMP
 			{
 				_propProgress.Value = (float)_gwork.CountNow / (float)_gwork.Count;
 			}
+
+			_propAverageCalorie.Value = (int)_gwork.AverageCalorie;
+			_propInstantCalorie.Value = (int)_gwork.InstantCalorie;
 
 			for (int i = 0; i < _partworks.Length; i++)
 			{
@@ -226,6 +232,22 @@ namespace UnityFMP
 			get
 			{
 				return _propPCMChannelCount;
+			}
+		}
+
+		public IReadOnlyReactiveProperty<int> AverageCalorie
+		{
+			get
+			{
+				return _propAverageCalorie;
+			}
+		}
+
+		public IReadOnlyReactiveProperty<int> InstantCalorie
+		{
+			get
+			{
+				return _propInstantCalorie;
 			}
 		}
 

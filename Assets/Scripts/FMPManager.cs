@@ -20,6 +20,8 @@ public class FMPManager : MonoBehaviour
 	public UnityEngine.UI.Button _playOrPauseButton;
 	public UnityEngine.UI.Slider _playProgress;
 	public UnityEngine.UI.Text _playTime;
+	public UnityEngine.UI.Text _channelCountInfo;
+	public UnityEngine.UI.Text _calorieInfo;
 
 	public FMPManager()
 	{
@@ -60,6 +62,51 @@ public class FMPManager : MonoBehaviour
 		FMPWork.PlayTime
 			.Select(value => (new System.DateTime(value.Ticks)).ToString(_timeFormat))
 			.SubscribeToText(_playTime).AddTo(this);
+
+		FMPWork.MusicStartEvent.Subscribe(_ =>
+		{
+			var sb = new System.Text.StringBuilder();
+			if (FMPWork.FMChannelCount.Value > 0)
+			{
+				sb.AppendFormat("FM: {0}ch\n", FMPWork.FMChannelCount.Value);
+			}
+			if (FMPWork.SSGChannelCount.Value > 0)
+			{
+				sb.AppendFormat("SSG: {0}ch\n", FMPWork.SSGChannelCount.Value);
+			}
+			if (FMPWork.PCMChannelCount.Value > 0)
+			{
+				sb.AppendFormat("PCM: {0}ch\n", FMPWork.PCMChannelCount.Value);
+			}
+			sb.AppendFormat("Total: {0}ch", FMPWork.ActiveChannelCount);
+			_channelCountInfo.text = sb.ToString();
+		}).AddTo(this);
+
+		Observable.Create<Tuple<int, int>>(observer =>
+		{
+			var sw = new System.Diagnostics.Stopwatch();
+			sw.Start();
+			return FMPWork.AverageCalorie.Zip(
+				FMPWork.InstantCalorie,
+				(value1, value2) =>
+				{
+					return new Tuple<int, int>(value1, value2);
+				}).Subscribe(value =>
+				{
+					if (sw.ElapsedMilliseconds > 1000)
+					{
+						observer.OnNext(value);
+						sw.Reset();
+						sw.Start();
+					}
+				});
+		})
+		.Select(value =>
+		{
+			return string.Format("Avg {0}\nInstant {1}", value.Item1, value.Item2);
+		})
+		.SubscribeToText(_calorieInfo)
+		.AddTo(this);
 	}
 
 	void OnDestroy()

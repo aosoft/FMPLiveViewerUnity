@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using FMP.FMP7;
 using UnityFMP;
 using UniRx;
 using UniRx.Triggers;
+
+public enum SceneType : int
+{
+	Unspecified = 0,
+	LevelMeter2011,
+}
 
 public class FMPManager : MonoBehaviour
 {
@@ -13,6 +20,8 @@ public class FMPManager : MonoBehaviour
 
 	private static string _timeFormat =
 		string.Format("HH:mm:ss{0}ff", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
+	private SceneType _currentSceneType = SceneType.Unspecified;
 
 	public UnityEngine.UI.Text _musicTitle;
 	public UnityEngine.UI.Text _musicCreator;
@@ -29,6 +38,7 @@ public class FMPManager : MonoBehaviour
 
 	public void Awake()
 	{
+		_currentSceneType = SceneType.Unspecified;
 		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
 
 		FMPWork.MusicTitle.SubscribeToText(_musicTitle).AddTo(this);
@@ -103,10 +113,12 @@ public class FMPManager : MonoBehaviour
 		})
 		.Select(value =>
 		{
-			return string.Format("Avg {0}\nInstant {1}", value.Item1, value.Item2);
+			return string.Format("Calorie\nAvg {0}\nInstant {1}", value.Item1, value.Item2);
 		})
 		.SubscribeToText(_calorieInfo)
 		.AddTo(this);
+
+		ChangeSubScene(SceneType.LevelMeter2011);
 	}
 
 	void OnDestroy()
@@ -117,6 +129,32 @@ public class FMPManager : MonoBehaviour
 			_work = null;
 		}
 	}
+
+
+	public void ChangeSubScene(SceneType scene)
+	{
+		if (_currentSceneType == scene)
+		{
+			return;
+		}
+
+		if (_currentSceneType > SceneType.Unspecified)
+		{
+			SceneManager.UnloadSceneAsync((int)_currentSceneType).AsAsyncOperationObservable()
+				.Subscribe(_ =>
+				{
+					SceneManager.LoadScene((int)scene, LoadSceneMode.Additive);
+					_currentSceneType = scene;
+				});
+		}
+		else
+		{
+			SceneManager.LoadScene((int)scene, LoadSceneMode.Additive);
+			_currentSceneType = scene;
+		}
+	}
+
+
 
 	static public RxFMPWork FMPWork
 	{

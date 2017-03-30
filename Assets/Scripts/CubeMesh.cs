@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class CubeMesh : MonoBehaviour
 {
@@ -32,15 +33,19 @@ public class CubeMesh : MonoBehaviour
 			new Vector3( 0.5f, 0.0f,  0.5f),
 		};
 
-	static private int[] _indicesTriangles = new int[]
+	static private int[][] _indicesSurfaces = new int[][]
 		{
-			0, 1, 2, 2, 3, 0,
-			7, 6, 5, 5, 4, 7,
-			4, 5, 1, 1, 0, 4,
-			3, 2, 6, 6, 7, 3,
-			1, 5, 6, 6, 2, 1,
-			4, 0, 3, 3, 7, 4,
+			new int[] { 0, 1, 2, 2, 3, 0, },
+			new int[] { 7, 6, 5, 5, 4, 7, },
+			new int[] { 4, 5, 1, 1, 0, 4, },
+			new int[] { 3, 2, 6, 6, 7, 3, },
+			new int[] { 1, 5, 6, 6, 2, 1, },
+			new int[] { 4, 0, 3, 3, 7, 4, },
 		};
+
+	static private List<Vector3> _verticesTriangles = null;
+	static private List<Vector3> _normalsTriangles = null;
+	static private int[] _indicesTriangles = null;
 
 	static private int[] _indicesLines = new int[]
 		{
@@ -56,8 +61,32 @@ public class CubeMesh : MonoBehaviour
 	{
 		var mesh = new Mesh();
 
-		mesh.SetVertices(_vertices);
+		if (_verticesTriangles == null ||
+			_normalsTriangles == null ||
+			_indicesTriangles == null)
+		{
+			var vertices = new List<Vector3>();
+			var normals = new List<Vector3>();
+			foreach (var surface in _indicesSurfaces)
+			{
+				Vector3 a = _vertices[surface[1]] - _vertices[surface[0]];
+				Vector3 b = _vertices[surface[2]] - _vertices[surface[0]];
+				Vector3 c = Vector3.Cross(a, b);
+
+				foreach (var index in surface)
+				{
+					vertices.Add(_vertices[index]);
+					normals.Add(c);
+				}
+			}
+			_verticesTriangles = vertices;
+			_normalsTriangles = normals;
+			_indicesTriangles = Enumerable.Range(0, vertices.Count).ToArray();
+		}
+
+		mesh.SetVertices(_verticesTriangles);
 		mesh.SetIndices(_indicesTriangles, MeshTopology.Triangles, 0);
+		mesh.SetNormals(_normalsTriangles);
 
 		return mesh;
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(MeshFilter))]
 public class CubeMesh : MonoBehaviour
 {
 	public bool _lineMesh;

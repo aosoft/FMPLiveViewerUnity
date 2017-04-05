@@ -19,9 +19,9 @@ public class LevelMeter : MonoBehaviour
 
 	private void Awake()
 	{
-		var bodyRenderer = _body.GetComponent<MeshRenderer>();
+		var bodyRenderer = _body.GetComponentInChildren<MeshRenderer>();
 		var bodyAnimator = _body.GetComponent<Animator>();
-		var peakRenderer = _peak.GetComponent<MeshRenderer>();
+		var peakRenderer = _peak.GetComponentInChildren<MeshRenderer>();
 		var peakAnimator = _peak.GetComponent<Animator>();
 
 		//	Scale の初期値をひかえておく

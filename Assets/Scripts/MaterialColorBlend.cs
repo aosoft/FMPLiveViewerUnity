@@ -10,8 +10,14 @@ public class MaterialColorBlend : MonoBehaviour
 	public string _propertyName = null;
 	public Color _colorA = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 	public Color _colorB = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	public float _ratioValue = 0.0f;
 
-	private FloatReactiveProperty _propRatio = new FloatReactiveProperty();
+	private ReactiveProperty<float> _propRatio = null;
+
+	public MaterialColorBlend()
+	{
+		_propRatio = this.ObserveEveryValueChanged(x => x._ratioValue).ToReactiveProperty();
+	}
 
 	void Awake()
 	{
@@ -38,7 +44,7 @@ public class MaterialColorBlend : MonoBehaviour
 	}
 
 
-	public FloatReactiveProperty Ratio
+	public ReactiveProperty<float> Ratio
 	{
 		get
 		{

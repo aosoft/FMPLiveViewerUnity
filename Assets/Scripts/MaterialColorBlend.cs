@@ -16,7 +16,6 @@ public class MaterialColorBlend : MonoBehaviour
 
 	public MaterialColorBlend()
 	{
-		_propRatio = this.ObserveEveryValueChanged(x => x._ratioValue).ToReactiveProperty();
 	}
 
 	void Awake()
@@ -28,10 +27,12 @@ public class MaterialColorBlend : MonoBehaviour
 			renderer.material.EnableKeyword(_shaderKeyword);
 		}
 
+		_propRatio = this.ObserveEveryValueChanged(x => x._ratioValue).ToReactiveProperty().AddTo(this);
+
 		_propRatio.Subscribe(value =>
 		{
-			var rateA = Mathf.Min(1.0f, Mathf.Max(0.0f, value));
-			var rateB = 1.0f - rateA;
+			var rateB = Mathf.Min(1.0f, Mathf.Max(0.0f, value));
+			var rateA = 1.0f - rateB;
 
 			renderer.material.SetColor(_propertyName,
 				new Color(
@@ -39,7 +40,6 @@ public class MaterialColorBlend : MonoBehaviour
 					_colorA.g * rateA + _colorB.g * rateB,
 					_colorA.b * rateA + _colorB.b * rateB,
 					_colorA.a * rateA + _colorB.a * rateB));
-
 		}).AddTo(this);
 	}
 

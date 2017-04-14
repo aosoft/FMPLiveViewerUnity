@@ -8,8 +8,13 @@ public class MaterialColorBlend : MonoBehaviour
 {
 	public string _shaderKeyword = null;
 	public string _propertyName = null;
+
+	[ColorUsageAttribute(true, true, 0f, 8f, 0.125f, 3f)]
 	public Color _colorA = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+	[ColorUsageAttribute(true, true, 0f, 8f, 0.125f, 3f)]
 	public Color _colorB = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 	public float _ratioValue = 0.0f;
 
 	private ReactiveProperty<float> _propRatio = null;

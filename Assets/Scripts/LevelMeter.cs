@@ -21,8 +21,10 @@ public class LevelMeter : MonoBehaviour
 	{
 		var bodyRenderer = _body.GetComponentInChildren<MeshRenderer>();
 		var bodyAnimator = _body.GetComponent<Animator>();
+		var bodyColorBlend = _body.GetComponentInChildren<MaterialColorBlend>();
 		var peakRenderer = _peak.GetComponentInChildren<MeshRenderer>();
 		var peakAnimator = _peak.GetComponent<Animator>();
+		var peakColorBlend = _body.GetComponentInChildren<MaterialColorBlend>();
 
 		//	Scale の初期値をひかえておく
 		//	レベルメーターの KeyOn 時に設定する Scale の最小値はこれを参照する。
@@ -58,6 +60,16 @@ public class LevelMeter : MonoBehaviour
 								mat = null;
 							}
 							break;
+					}
+
+					if (mat != null)
+					{
+						var colorA = mat.color * 0.8f;
+						var colorB = mat.color * 1.8f;
+						bodyColorBlend._colorA = colorA;
+						bodyColorBlend._colorB = colorB;
+						peakColorBlend._colorA = colorA;
+						peakColorBlend._colorB = colorB;
 					}
 
 					bodyRenderer.material = mat;

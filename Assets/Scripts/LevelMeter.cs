@@ -78,11 +78,14 @@ public class LevelMeter : MonoBehaviour
 
 				part.KeyOn.Subscribe(value =>
 				{
-					var tmp = transform.localScale;
-					tmp.y = Mathf.Max(5.0f * part.VolumeFloat.Value, _defaultLocalScale.y);
-					transform.localScale = tmp;
-					bodyAnimator.SetTrigger("Start");
-					peakAnimator.SetTrigger("Start");
+					if (part.Note.Value.IsRest == false)
+					{
+						var tmp = transform.localScale;
+						tmp.y = Mathf.Max(5.0f * part.VolumeFloat.Value, _defaultLocalScale.y);
+						transform.localScale = tmp;
+						bodyAnimator.SetTrigger("Start");
+						peakAnimator.SetTrigger("Start");
+					}
 				}).AddTo(this);
 			}
 		}).AddTo(this);

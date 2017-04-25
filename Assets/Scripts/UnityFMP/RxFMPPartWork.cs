@@ -25,15 +25,13 @@ namespace UnityFMP
 		public void Update(FMPPartWork work)
 		{
 			_currentWork = work;
-			if (work.Note.IsRest == false)
-			{
-				_propKeyOn.Value = work.Keyon;
-			}
 			_propNote.Value = work.Note;
 			_propVolume.Value = work.Volume;
 			_propVolumeFloat.Value = (float)work.Volume / 127.0f;
 			_propPan.Value = (int)work.Pan - 128;
 
+			//	KeyOn Counter は一番最後に更新しないと他要素が正しく反映されない可能性あり
+			_propKeyOn.Value = work.Keyon;
 		}
 
 		public void SetSoundUnit(FMPSoundUnit soundUnit)

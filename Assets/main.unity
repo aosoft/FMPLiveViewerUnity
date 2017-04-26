@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 153060641}
   - component: {fileID: 153060640}
   - component: {fileID: 153060639}
+  - component: {fileID: 153060643}
   m_Layer: 8
   m_Name: BG
   m_TagString: Untagged
@@ -341,6 +342,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &153060643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 153060638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baedf3a7bcf5e044cbaf746a977642d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 1813819871}
 --- !u!1 &331409036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2069,7 +2082,6 @@ GameObject:
   - component: {fileID: 1813819871}
   - component: {fileID: 1813819870}
   - component: {fileID: 1813819869}
-  - component: {fileID: 1813819868}
   m_Layer: 0
   m_Name: BG Camera
   m_TagString: Untagged
@@ -2077,13 +2089,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1813819868
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1813819867}
-  m_Enabled: 1
 --- !u!92 &1813819869
 Behaviour:
   m_ObjectHideFlags: 0

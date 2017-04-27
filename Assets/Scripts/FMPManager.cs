@@ -51,6 +51,7 @@ public class FMPManager : MonoBehaviour
 		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
 		int index = 0;
 		_nextMusicButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
+			.ObserveOn(Scheduler.ThreadPool)
 			.Subscribe(value =>
 			{
 				FMPControl.MusicLoadAndPlay(value);

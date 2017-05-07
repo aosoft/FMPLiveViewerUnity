@@ -91,6 +91,13 @@ public class LevelMeter : MonoBehaviour
 		}).AddTo(this);
 	}
 
+	public Vector3 DefaultLocalScale
+	{
+		get
+		{
+			return _defaultLocalScale;
+		}
+	}
 
 	public IReactiveProperty<RxFMPPartWork> PartWork
 	{

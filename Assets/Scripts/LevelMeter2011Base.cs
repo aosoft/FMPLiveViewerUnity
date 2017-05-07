@@ -45,7 +45,10 @@ public class LevelMeter2011Base : MonoBehaviour
 					_levelMeters[i].transform.localPosition =
 						new Vector3(4.0f * Mathf.Sin(angleR), 0.0f, 4.0f * Mathf.Cos(angleR));
 					_levelMeters[i].transform.localEulerAngles = new Vector3(0.0f, angle, 0.0f);
-					_levelMeters[i].transform.localScale = new Vector3(1.0f, 1.0f, width);
+
+					var scale = _levelMeters[i].GetComponent<LevelMeter>().DefaultLocalScale;
+					scale.z = width;
+					_levelMeters[i].transform.localScale = scale;
 				}
 				_levelMeters[i].SetActive(i < count);
 			}

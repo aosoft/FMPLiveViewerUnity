@@ -21,6 +21,11 @@ public class FMPManager : MonoBehaviour
 	private static string _timeFormat =
 		string.Format("HH:mm:ss{0}ff", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
 
+	[System.Runtime.InteropServices.DllImport("user32.dll")]
+	private static extern System.IntPtr GetActiveWindow();
+
+	private FMPMessageListener _fmpListener = null;
+	private FMPInfo _fmpInfo = null;
 	private SceneType _currentSceneType = SceneType.Unspecified;
 
 	public UnityEngine.UI.Text _musicTitle;
@@ -38,8 +43,33 @@ public class FMPManager : MonoBehaviour
 
 	public void Awake()
 	{
+		_fmpInfo = null;
+		var handle = GetActiveWindow();
+		if (handle != System.IntPtr.Zero)
+		{
+			_fmpListener = new FMPMessageListener();
+			_fmpListener.FMPMessageEvent += (s, e) =>
+			{
+				switch (e.Message)
+				{
+					case FMPMessage.StartFMP:
+						{
+							_fmpInfo = FMPControl.GetFMPInfo();
+						}
+						break;
+					case FMPMessage.EndFMP:
+						{
+							_fmpInfo = null;
+						}
+						break;
+				}
+			};
+			_fmpListener.AssignHandle(handle);
+		}
+		_fmpInfo = FMPControl.GetFMPInfo();
+
 		_currentSceneType = SceneType.Unspecified;
-		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update()).AddTo(this);
+		this.UpdateAsObservable().Subscribe(_ => FMPWork.Update(_fmpInfo)).AddTo(this);
 
 		FMPWork.MusicTitle.SubscribeToText(_musicTitle).AddTo(this);
 		FMPWork.MusicCreator.SubscribeToText(_musicCreator).AddTo(this);
@@ -124,6 +154,11 @@ public class FMPManager : MonoBehaviour
 
 	void OnDestroy()
 	{
+		if (_fmpListener != null)
+		{
+			_fmpListener.ReleaseHandle();
+			_fmpListener = null;
+		}
 		if (_work != null)
 		{
 			_work.Dispose();

@@ -49,11 +49,21 @@ namespace UnityFMP
 			_observeMusicStart.OnCompleted();
 		}
 
-		public void Update()
+		public void Update(FMPInfo info)
 		{
 			try
 			{
-				_work.Open();
+				var sw = new System.Diagnostics.Stopwatch();
+				sw.Start();
+				if (_work.Open(info, 1) == false)
+				{
+					return;
+				}
+				if (sw.ElapsedMilliseconds > 500)
+				{
+					UnityEngine.Debug.Log(sw.Elapsed.ToString());
+				}
+
 				try
 				{
 					_gwork = _work.GetGlobalWork();

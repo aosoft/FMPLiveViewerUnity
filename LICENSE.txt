@@ -1,4 +1,6 @@
-FMP7 Live Viewer (Made with Unity)
+FMP7 Live Viewer (Unity Ver.)
+
+The MIT License (MIT)
 
 Copyright (c) 2017 TAN-Y
 FMP7 Logo - Copyright (c) 2011 Sentaro
@@ -24,6 +26,8 @@ SOFTWARE.
 
 --------
 UniRx
+
+The MIT License (MIT)
 
 Copyright (c) 2014 Yoshifumi Kawai
 

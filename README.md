@@ -1,4 +1,4 @@
-FMP7 Live Viewer (Made with Unity)
+FMP7 Live Viewer (Unity Ver.)
 =====
 Copyright (C) 2017 TAN-Y
 
@@ -28,6 +28,7 @@ Viewer としてはまだまだですが、 Unity アプリのサンプルとし
 | Next Music | StreamingAssets 内の曲データを順次切り替えて再生開始する。 |
 | Play (Pause) | 現在ロードされている曲の再生／一時停止 |
 
+FMP7 は起動していないと操作できません。
 
 ## コードのポイント
 
@@ -37,11 +38,13 @@ RxFMPWork はシングルトンで保持をし、どこかの MonoBehavior の O
 
 FMP のバージョンやワークサイズの情報は FMPMessageListener を用いて FMP 起動のタイミングで取得し、 FMPWork にアクセスする際には取得済のものを利用するようにしています。 FMPWork 取得時に毎回ワーク情報を取得しようとすると、巨大な PCM のデータをロードする際、一瞬フリーズしてしまうので注意が必要です。
 
-FMP 関連以外はなるべく Unity の機能を使うようにしています。レベルメーターは Animator で動かしています。
+FMP の制御、連携以外については特に変わった事はしていません。
 
 ## ライセンス
 
 MIT License です。
+
+利用させていただいている下記コンポーネントはそれぞれのライセンスに従います。
 
 * [UniRx](https://github.com/neuecc/UniRx) (MIT License)
 * [FMP7 SDK for .NET](https://github.com/aosoft/FMP7ApiCLR) (zlib/libpng License)

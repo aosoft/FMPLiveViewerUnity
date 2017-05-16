@@ -1,4 +1,4 @@
-## FMP7 LiveViewer (Made with Unity) 更新履歴
+## FMP7 LiveViewer (Unity Ver.) 更新履歴
 
 [README](README.md)
 

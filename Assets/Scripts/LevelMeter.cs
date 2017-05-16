@@ -66,6 +66,8 @@ public class LevelMeter : MonoBehaviour
 					{
 						var colorA = mat.color * 0.8f;
 						var colorB = mat.color * 1.8f;
+						colorA.a = 1.0f;
+						colorB.a = 1.0f;
 						bodyColorBlend._colorA = colorA;
 						bodyColorBlend._colorB = colorB;
 						peakColorBlend._colorA = colorA;

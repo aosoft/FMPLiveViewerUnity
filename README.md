@@ -19,7 +19,7 @@ Viewer としてはまだまだですが、 Unity アプリのサンプルとし
 
 ## 動かし方
 
-"StreamingAssets" フォルダ下に FMP7 の曲データを配置してください。 (ビルド済バイナリでも StreamingAssets の中身を変えてしまって OK です)
+"Assets/StreamingAssets" フォルダを作成し、その中に FMP7 の曲データを配置してください。 (ビルド済バイナリでも StreamingAssets の中身を変えてしまって OK です)
 
 起動すると "Next Music" と "Play" ボタンが表示されます。操作できるものは今のところこれだけです。
 

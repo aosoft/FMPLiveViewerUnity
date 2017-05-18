@@ -78,14 +78,23 @@ public class FMPManager : MonoBehaviour
 			.SubscribeToText(_playOrPauseButton.GetComponentInChildren<UnityEngine.UI.Text>())
 			.AddTo(this);
 
-		var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
-		int index = 0;
-		_nextMusicButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
-			.ObserveOn(Scheduler.ThreadPool)
-			.Subscribe(value =>
+		try
+		{
+			var musics = System.IO.Directory.GetFiles(Application.streamingAssetsPath, "*.owi");
+			if (musics != null && musics.Length > 0)
 			{
-				FMPControl.MusicLoadAndPlay(value);
-			}).AddTo(this);
+				int index = 0;
+				_nextMusicButton.OnClickAsObservable().Select(_ => musics[(index++) % musics.Length])
+					.ObserveOn(Scheduler.ThreadPool)
+					.Subscribe(value =>
+					{
+						FMPControl.MusicLoadAndPlay(value);
+					}).AddTo(this);
+			}
+		}
+		catch
+		{
+		}
 
 		_playOrPauseButton.OnClickAsObservable().Subscribe(_ =>
 		{
